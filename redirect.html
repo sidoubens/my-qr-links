@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opening App...</title>
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background-color: #0f111a; color: #fff; text-align: center; 
+            padding: 40px 20px; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0;
+        }
+        .container { max-width: 400px; }
+        .button { 
+            display: inline-block; background-color: #4f46e5; color: white; 
+            padding: 15px 30px; border-radius: 12px; text-decoration: none; 
+            font-weight: bold; margin-top: 20px; transition: background 0.3s;
+        }
+        .button:hover { background-color: #6366f1; }
+        .fallback { margin-top: 30px; font-size: 14px; color: #8b92a5; }
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.1); border-top: 4px solid #4f46e5;
+            border-radius: 50%; width: 40px; height: 40px; 
+            animation: spin 1s linear infinite; margin: 0 auto 20px auto;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="loading" class="spinner"></div>
+        <h1 id="status">Opening...</h1>
+        <p id="subtext">Trying to open the app.</p>
+        <div id="actions" style="display: none;">
+            <a id="webLink" class="button" href="#">Open in Browser</a>
+            <p class="fallback">App not installed or blocked? The link will open in your browser.</p>
+        </div>
+    </div>
+
+    <script>
+        const platformConfig = {
+            "Instagram": { scheme: "instagram://user?username=", web: "https://instagram.com/" },
+            "Facebook": { scheme: "fb://profile/", web: "https://facebook.com/" },
+            "YouTube": { scheme: "youtube://www.youtube.com/@", web: "https://youtube.com/@" },
+            "Telegram": { scheme: "tg://resolve?domain=", web: "https://t.me/" },
+            "TikTok": { scheme: "snssdk1128://user/profile/", web: "https://tiktok.com/@" },
+            "X": { scheme: "twitter://user?screen_name=", web: "https://x.com/" },
+            "Snapchat": { scheme: "snapchat://add/", web: "https://snapchat.com/add/" },
+            "Pinterest": { scheme: "pinterest://user/", web: "https://pinterest.com/" },
+            "LinkedIn": { scheme: "linkedin://profile/", web: "https://linkedin.com/in/" },
+            "Discord": { scheme: "discord://-/invite/", web: "https://discord.gg/" },
+            "WhatsApp": { scheme: "whatsapp://send?phone=", web: "https://wa.me/" },
+        };
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const platform = urlParams.get('platform');
+        const user = urlParams.get('user');
+
+        const statusEl = document.getElementById('status');
+        const subtextEl = document.getElementById('subtext');
+        const actionsEl = document.getElementById('actions');
+        const webLinkEl = document.getElementById('webLink');
+        const loadingEl = document.getElementById('loading');
+
+        if (platform && user && platformConfig[platform]) {
+            const config = platformConfig[platform];
+            const appUrl = config.scheme + user;
+            const webUrl = config.web + user;
+
+            webLinkEl.href = webUrl;
+            webLinkEl.target = "_blank";
+
+            // محاولة فتح التطبيق
+            window.location.href = appUrl;
+
+            // إظهار الخيارات الاحتياطية بعد فترة قصيرة
+            setTimeout(() => {
+                loadingEl.style.display = "none";
+                statusEl.textContent = "App Not Found?";
+                subtextEl.textContent = "If the app didn't open automatically, tap the button below.";
+                actionsEl.style.display = "block";
+            }, 1500);
+
+        } else {
+            loadingEl.style.display = "none";
+            statusEl.textContent = "Invalid Link";
+            subtextEl.textContent = "The QR code did not contain valid parameters.";
+        }
+    </script>
+</body>
+</html>
