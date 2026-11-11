@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <style>
+        body { background-color: #000; color: #fff; margin: 0; padding: 0; overflow: hidden; }
+        #fallback { display: none; text-align: center; margin-top: 40vh; font-family: -apple-system, sans-serif; }
+        .button { display: inline-block; background-color: #4f46e5; color: white; padding: 15px 30px; border-radius: 12px; text-decoration: none; font-weight: bold; font-size: 16px; }
+        p { color: #888; font-size: 14px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div id="fallback">
+        <a id="webLink" class="button" href="#">Open App or Browser</a>
+        <p>If the app didn't open automatically, tap the button above.</p>
+    </div>
+
+    <script>
+        const platformConfig = {
+            "Instagram": { scheme: "instagram://user?username=", web: "https://instagram.com/" },
+            "Facebook": { scheme: "fb://profile/", web: "https://facebook.com/" },
+            "YouTube": { scheme: "youtube://www.youtube.com/@", web: "https://youtube.com/@" },
+            "Telegram": { scheme: "tg://resolve?domain=", web: "https://t.me/" },
+            "TikTok": { scheme: "snssdk1128://user/profile/", web: "https://tiktok.com/@" },
+            "X": { scheme: "twitter://user?screen_name=", web: "https://x.com/" },
+            "Snapchat": { scheme: "snapchat://add/", web: "https://snapchat.com/add/" },
+            "Pinterest": { scheme: "pinterest://user/", web: "https://pinterest.com/" },
+            "LinkedIn": { scheme: "linkedin://profile/", web: "https://linkedin.com/in/" },
+            "Discord": { scheme: "discord://-/invite/", web: "https://discord.gg/" },
+            "WhatsApp": { scheme: "whatsapp://send?phone=", web: "https://wa.me/" },
+        };
+
+        // قراءة البيانات من الرابط باستخدام #
+        const hash = window.location.hash.substring(1); 
+        const parts = hash.split('/'); 
+        
+        let platform = null;
+        let user = null;
+
+        if (parts.length >= 2) {
+            platform = parts[0];
+            user = parts[1];
+        }
+
+        if (platform && user && platformConfig[platform]) {
+            const config = platformConfig[platform];
+            const appUrl = config.scheme + user;
+            const webUrl = config.web + user;
+
+            document.getElementById('webLink').href = webUrl;
+            document.getElementById('webLink').target = "_blank";
+
+            // محاولة فتح التطبيق عبر النقر التلقائي
+            const hiddenLink = document.createElement('a');
+            hiddenLink.href = appUrl;
+            hiddenLink.style.display = 'none';
+            document.body.appendChild(hiddenLink);
+            hiddenLink.click();
+
+            window.location.href = appUrl;
+
+            setTimeout(() => {
+                document.getElementById('fallback').style.display = "block";
+            }, 2000);
+
+        } else {
+            document.getElementById('fallback').style.display = "block";
+            document.getElementById('webLink').innerText = "Go Back";
+            document.getElementById('webLink').href = "/";
+        }
+    </script>
+</body>
+</html>
