@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My Links</title>
+    <!-- استدعاء خطوط جوجل الاحترافية للعربية والإنجليزية -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f111a;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-main: #ffffff;
+            --text-muted: #8b92a5;
+            --accent: #4f46e5;
+            --gradient-1: #38bdf8;
+            --gradient-2: #818cf8;
+            --gradient-3: #c084fc;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Poppins', 'Cairo', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* خلفية متحركة احترافية */
+        .bg-animation {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 15% 50%, rgba(56, 189, 248, 0.08), transparent 25%),
+                        radial-gradient(circle at 85% 30%, rgba(192, 132, 252, 0.08), transparent 25%);
+        }
+
+        body[dir="rtl"] { font-family: 'Cairo', sans-serif; }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* زر تغيير اللغة */
+        .lang-switch {
+            align-self: flex-end;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-main);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+        .lang-switch:hover { background: rgba(255,255,255,0.1); }
+
+        /* الاسم المزخرف */
+        .header-section {
+            text-align: center;
+            margin-bottom: 40px;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .welcome-text {
+            font-size: 16px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        body[dir="rtl"] .welcome-text { letter-spacing: normal; }
+
+        .owner-name {
+            font-size: 38px;
+            font-weight: 900;
+            background: linear-gradient(to right, var(--gradient-1), var(--gradient-2), var(--gradient-3));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 15px;
+            line-height: 1.2;
+            word-break: break-word;
+            text-shadow: 0 0 30px rgba(129, 140, 248, 0.3);
+        }
+
+        .divider {
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(to right, var(--gradient-1), var(--gradient-3));
+            border-radius: 2px;
+            margin: 0 auto;
+        }
+
+        /* شبكة الروابط */
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            width: 100%;
+        }
+
+        @media (min-width: 480px) {
+            .links-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        .link-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 10px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            text-decoration: none;
+            color: var(--text-main);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .link-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.05), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
+        }
+
+        .link-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5), 0 0 20px rgba(129, 140, 248, 0.1);
+        }
+
+        .link-card:hover::before { transform: translateX(100%); }
+
+        .icon-container {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            background: #ffffff;
+            padding: 10px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .icon-container img { width: 100%; height: 100%; object-fit: contain; }
+
+        .icon-fallback {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--accent), var(--gradient-3));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .link-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: color 0.3s ease;
+        }
+
+        .link-card:hover .link-name { color: var(--text-main); }
+
+        /* رسالة الخطأ */
+        .error-msg {
+            text-align: center;
+            color: var(--text-muted);
+            margin-top: 50px;
+            font-size: 16px;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid var(--card-border);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+
+    <div class="container">
+        <button class="lang-switch" id="langBtn" onclick="toggleLang()">عربي</button>
+
+        <div class="header-section">
+            <div class="welcome-text" id="welcomeText">WELCOME TO</div>
+            <h1 class="owner-name" id="ownerName"></h1>
+            <div class="divider"></div>
+        </div>
+
+        <div class="links-grid" id="linksGrid"></div>
+        <div class="error-msg" id="errorMsg" style="display: none;">Invalid or unsupported link.</div>
+    </div>
+
+    <script>
+        // إعدادات اللغة
+        let currentLang = 'en';
+        const translations = {
+            en: { 
+                welcome: "WELCOME TO", 
+                error: "Invalid or unsupported link.", 
+                switchBtn: "عربي", 
+                names: { f: "Facebook", d: "Discord", i: "Instagram", l: "LinkedIn", lc: "Location", p: "Pinterest", s: "Snapchat", t: "TikTok", tl: "Telegram", w: "WhatsApp", wb: "Website", x: "X", y: "YouTube" } 
+            },
+            ar: { 
+                welcome: "أهلاً بك في", 
+                error: "الرابط غير صالح أو غير مدعوم.", 
+                switchBtn: "English", 
+                names: { f: "فيسبوك", d: "ديسكورد", i: "إنستغرام", l: "لينكد إن", lc: "الموقع", p: "بينتريست", s: "سناب شات", t: "تيك توك", tl: "تيليجرام", w: "واتساب", wb: "الموقع الإلكتروني", x: "إكس", y: "يوتيوب" } 
+            }
+        };
+
+        function toggleLang() {
+            currentLang = currentLang === 'en' ? 'ar' : 'en';
+            document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+            document.documentElement.lang = currentLang;
+            
+            document.getElementById('langBtn').innerText = translations[currentLang].switchBtn;
+            document.getElementById('welcomeText').innerText = translations[currentLang].welcome;
+            document.getElementById('errorMsg').innerText = translations[currentLang].error;
+            
+            // إعادة عرض الروابط لتحديث الأسماء
+            if (window.decodedData) {
+                renderLinks(window.decodedData);
+            }
+        }
+
+        // مسار مجلد الشعارات (يجب أن يكون مجلد logo_qr بجانب هذا الملف)
+        const LOGO_DIR = "logo_qr/";
+
+        function b64urlToBytes(s) {
+            s = s.replace(/-/g, "+").replace(/_/g, "/");
+            while (s.length % 4) s += "=";
+            const bin = atob(s);
+            const out = new Uint8Array(bin.length);
+            for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+            return out;
+        }
+
+        async function decode(hash) {
+            const bytes = b64urlToBytes(hash);
+            const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream("deflate-raw"));
+            const text = await new Response(stream).text();
+            
+            // فك التشفير بناءً على الصيغة الجديدة: name|id:link;id:link
+            const parts = text.split('|');
+            const name = parts[0];
+            const linksStr = parts[1];
+            
+            const links = [];
+            if (linksStr) {
+                linksStr.split(';').forEach(item => {
+                    const colonIndex = item.indexOf(':');
+                    if (colonIndex > -1) {
+                        links.push([item.substring(0, colonIndex), item.substring(colonIndex + 1)]);
+                    }
+                });
+            }
+            return { n: name, l: links };
+        }
+
+        function renderLinks(data) {
+            const grid = document.getElementById('linksGrid');
+            grid.innerHTML = '';
+            
+            // تحديث الاسم
+            const ownerNameEl = document.getElementById('ownerName');
+            if (data.n && data.n.trim() !== "") {
+                ownerNameEl.innerText = data.n;
+            } else {
+                ownerNameEl.innerText = "My Links";
+            }
+
+            const names = translations[currentLang].names;
+
+            data.l.forEach(([id, value]) => {
+                const url = /^https?:\/\//i.test(value) ? value : "https://" + value;
+
+                const a = document.createElement("a");
+                a.className = "link-card";
+                a.href = url;
+                a.target = "_blank";
+                a.rel = "noopener";
+
+                // حاوية الأيقونة
+                const iconDiv = document.createElement("div");
+                iconDiv.className = "icon-container";
+                
+                const img = document.createElement("img");
+                img.alt = names[id] || id;
+                img.src = LOGO_DIR + id + "1.png";
+                
+                // إذا لم توجد الصورة، نضع الحرف الأول كبديل
+                img.onerror = function () {
+                    iconDiv.style.display = "none";
+                    const fallback = document.createElement("div");
+                    fallback.className = "icon-fallback";
+                    fallback.textContent = (names[id] || id).charAt(0);
+                    a.insertBefore(fallback, a.firstChild);
+                };
+
+                iconDiv.appendChild(img);
+
+                const n = document.createElement("div");
+                n.className = "link-name";
+                n.textContent = names[id] || id;
+
+                a.appendChild(iconDiv);
+                a.appendChild(n);
+                grid.appendChild(a);
+            });
+        }
+
+        (async function () {
+            try {
+                const hash = location.hash.slice(1);
+                if (!hash) {
+                    document.getElementById('errorMsg').style.display = 'block';
+                    return;
+                }
+                const data = await decode(hash);
+                window.decodedData = data; // لحفظها من أجل تغيير اللغة
+                renderLinks(data);
+            } catch (e) {
+                document.getElementById('errorMsg').style.display = 'block';
+            }
+        })();
+    </script>
+</body>
+</html>
