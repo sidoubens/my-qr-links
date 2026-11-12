@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#0a0f1e">
+    <title>My Links</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
+    <style>
+        :root {
+            --bg: #0a0f1e;
+            --text: #eef2ff;
+            --muted: #8f9bbd;
+            --line: rgba(255, 255, 255, 0.09);
+            --g1: #38bdf8;
+            --g2: #818cf8;
+            --g3: #c084fc;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        html { -webkit-text-size-adjust: 100%; }
+        body {
+            min-height: 100vh; min-height: 100dvh;
+            background: var(--bg); color: var(--text);
+            font-family: 'Poppins', 'Cairo', system-ui, sans-serif;
+            -webkit-font-smoothing: antialiased; overflow-x: hidden;
+        }
+        html[dir="rtl"] body { font-family: 'Cairo', 'Poppins', system-ui, sans-serif; }
+
+        /* ---------- background ---------- */
+        .aurora { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+        .aurora i {
+            position: absolute; width: 60vmax; height: 60vmax; border-radius: 50%;
+            filter: blur(90px); opacity: .34; animation: drift 24s ease-in-out infinite alternate;
+        }
+        .aurora i:nth-child(1) { background: #2563eb; top: -26vmax; left: -20vmax; }
+        .aurora i:nth-child(2) { background: #9333ea; bottom: -28vmax; right: -22vmax; animation-delay: -9s; }
+        .aurora i:nth-child(3) { background: #0891b2; top: 38%; left: 42%; width: 38vmax; height: 38vmax; opacity: .16; animation-delay: -15s; }
+        @keyframes drift { to { transform: translate3d(6vmax, 4vmax, 0) scale(1.12); } }
+
+        /* ---------- layout ---------- */
+        .page {
+            width: 100%; max-width: 480px; margin: 0 auto;
+            padding: calc(18px + env(safe-area-inset-top)) 18px calc(40px + env(safe-area-inset-bottom));
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .topbar { width: 100%; display: flex; justify-content: flex-end; }
+        .lang {
+            display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
+            padding: 8px 16px; border-radius: 99px; border: 1px solid var(--line);
+            background: rgba(255, 255, 255, 0.05); color: var(--text);
+            font-size: 13px; font-weight: 600; font-family: inherit;
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            transition: background .25s, transform .2s;
+        }
+        .lang:hover { background: rgba(255, 255, 255, 0.1); }
+        .lang:active { transform: scale(.96); }
+
+        /* ---------- profile ---------- */
+        .profile { text-align: center; margin: 20px 0 30px; width: 100%; animation: rise .7s cubic-bezier(.2, .8, .2, 1) both; }
+        .avatar {
+            width: 108px; height: 108px; margin: 0 auto 20px; border-radius: 50%; padding: 3px;
+            background: conic-gradient(from 210deg, var(--g1), var(--g2), var(--g3), var(--g1));
+            box-shadow: 0 20px 54px -18px rgba(129, 140, 248, .75);
+        }
+        .avatar span {
+            display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;
+            border-radius: 50%; background: #0d1328; font-size: 34px; font-weight: 700; letter-spacing: 1px;
+        }
+        .avatar svg { width: 40px; height: 40px; }
+        .name {
+            font-size: 30px; font-weight: 700; line-height: 1.25; word-break: break-word; margin-bottom: 8px;
+            background: linear-gradient(90deg, var(--g1), var(--g2), var(--g3));
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+        }
+        .sub { color: var(--muted); font-size: 14px; }
+        .count {
+            display: inline-flex; align-items: center; gap: 8px; margin-top: 16px;
+            padding: 6px 14px; border-radius: 99px; border: 1px solid var(--line);
+            background: rgba(255, 255, 255, 0.04); font-size: 12px; color: var(--muted);
+        }
+        .count b { color: var(--text); font-weight: 600; }
+        .dot { width: 7px; height: 7px; border-radius: 50%; background: #34d399; box-shadow: 0 0 0 0 rgba(52, 211, 153, .6); animation: pulse 2s infinite; }
+        @keyframes pulse { 70% { box-shadow: 0 0 0 8px rgba(52, 211, 153, 0); } 100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); } }
+
+        /* ---------- links ---------- */
+        .links { width: 100%; display: flex; flex-direction: column; gap: 12px; }
+        .link {
+            --b: #818cf8; --b-soft: rgba(129, 140, 248, .22); --b-mid: rgba(129, 140, 248, .55);
+            position: relative; display: flex; align-items: center; gap: 14px;
+            padding: 12px 14px; border-radius: 20px; text-decoration: none; color: var(--text);
+            background: linear-gradient(180deg, rgba(255, 255, 255, .06), rgba(255, 255, 255, .025));
+            border: 1px solid var(--line); overflow: hidden;
+            backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+            transition: transform .3s cubic-bezier(.2, .8, .2, 1), border-color .3s, box-shadow .3s;
+            animation: rise .6s cubic-bezier(.2, .8, .2, 1) both;
+            animation-delay: calc(var(--i) * 70ms + 160ms);
+        }
+        .link::before {
+            content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+            background: radial-gradient(130% 160% at 0% 0%, var(--b-soft), transparent 62%);
+            opacity: 0; transition: opacity .35s;
+        }
+        .link:hover, .link:focus-visible { transform: translateY(-2px); border-color: var(--b-mid); box-shadow: 0 16px 36px -16px var(--b-mid); outline: none; }
+        .link:hover::before, .link:focus-visible::before { opacity: 1; }
+        .link:active { transform: scale(.985); }
+        @keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+        .tile {
+            position: relative; width: 54px; height: 54px; flex: none; border-radius: 16px; background: #fff;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 8px 20px -8px rgba(0, 0, 0, .55);
+        }
+        .tile img { width: 100%; height: 100%; object-fit: contain; padding: 10px; }
+        .tile.fb { background: linear-gradient(135deg, var(--b), var(--g3)); color: #fff; font-size: 22px; font-weight: 700; }
+        .meta { position: relative; min-width: 0; flex: 1; }
+        .title { font-size: 15.5px; font-weight: 600; line-height: 1.3; }
+        .url {
+            margin-top: 2px; font-size: 12px; color: var(--muted); direction: ltr; text-align: start;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .chev {
+            position: relative; flex: none; width: 34px; height: 34px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(255, 255, 255, .07); color: var(--muted);
+            transition: background .3s, color .3s, transform .3s;
+        }
+        .link:hover .chev, .link:focus-visible .chev { background: var(--b); color: #fff; transform: translateX(2px); }
+        html[dir="rtl"] .link:hover .chev { transform: translateX(-2px); }
+        .chev svg { width: 16px; height: 16px; }
+        html[dir="rtl"] .chev svg { transform: scaleX(-1); }
+
+        .error-msg {
+            display: none; width: 100%; text-align: center; margin-top: 40px; padding: 28px 20px;
+            border-radius: 20px; border: 1px solid var(--line); background: rgba(255, 255, 255, .04);
+            color: var(--muted); font-size: 15px;
+        }
+        .error-msg .ico { font-size: 34px; display: block; margin-bottom: 10px; }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation: none !important; transition: none !important; }
+        }
+    </style>
+</head>
+<body>
+    <div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+
+    <main class="page">
+        <div class="topbar">
+            <button class="lang" id="langBtn" type="button" onclick="toggleLang()">عربي</button>
+        </div>
+
+        <header class="profile" id="profile" style="display:none">
+            <div class="avatar"><span id="avatar"></span></div>
+            <h1 class="name" id="ownerName"></h1>
+            <p class="sub" id="hint"></p>
+            <div class="count"><span class="dot"></span><span id="countText"></span></div>
+        </header>
+
+        <nav class="links" id="linksGrid" aria-label="Links"></nav>
+
+        <div class="error-msg" id="errorMsg"><span class="ico">&#128279;</span><span id="errorText"></span></div>
+    </main>
+
+    <script>
+        let currentLang = 'en';
+        const translations = {
+            en: {
+                error: "Invalid or unsupported link.", switchBtn: "عربي", hint: "Tap a link to open it in the app",
+                count: n => `<b>${n}</b> ${n === 1 ? 'link' : 'links'}`, defaultName: "My Links", open: "Open",
+                names: { f: "Facebook", d: "Discord", i: "Instagram", l: "LinkedIn", lc: "Location", p: "Pinterest", s: "Snapchat", t: "TikTok", tl: "Telegram", w: "WhatsApp", wb: "Website", x: "X", y: "YouTube", e: "Email", tp: "Phone" }
+            },
+            ar: {
+                error: "الرابط غير صالح أو غير مدعوم.", switchBtn: "English", hint: "اضغط على أي رابط لفتحه في التطبيق",
+                count: n => `<b>${n}</b> ${n === 1 ? 'رابط' : 'روابط'}`, defaultName: "روابطي", open: "فتح",
+                names: { f: "فيسبوك", d: "ديسكورد", i: "إنستغرام", l: "لينكد إن", lc: "الموقع", p: "بينتريست", s: "سناب شات", t: "تيك توك", tl: "تيليجرام", w: "واتساب", wb: "الموقع الإلكتروني", x: "إكس", y: "يوتيوب", e: "البريد الإلكتروني", tp: "اتصال هاتفي" }
+            }
+        };
+
+        const LOGO_DIR = "logo_qr/";
+
+        // Brand colour per platform: card glow, hover and fallback tile.
+        const BRAND = {
+            f: "#1877f2", d: "#5865f2", i: "#e1306c", l: "#0a66c2", lc: "#34a853", p: "#e60023",
+            s: "#fffc00", t: "#fe2c55", tl: "#26a5e4", w: "#25d366", wb: "#818cf8", x: "#9aa4bf", y: "#ff0000", e: "#ea4335", tp: "#22c55e"
+        };
+
+        // ---- open the real app directly (Android: intent link, iOS: universal link) ----
+        const IS_ANDROID = /Android/i.test(navigator.userAgent);
+        const IS_IOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+        // Packages are left out where several apps/forks exist (TikTok, Telegram, WhatsApp):
+        // Android then picks whichever installed app owns the link.
+        const ANDROID_PKG = {
+            f: "com.facebook.katana", d: "com.discord", i: "com.instagram.android", l: "com.linkedin.android",
+            lc: "com.google.android.apps.maps", p: "com.pinterest", s: "com.snapchat.android",
+            x: "com.twitter.android", y: "com.google.android.youtube"
+        };
+
+        // If the app is not installed, Android falls back to the normal web page.
+        function toIntentUrl(webUrl, pkg) {
+            try {
+                const u = new URL(webUrl);
+                if (!/^https?:$/.test(u.protocol)) return null;
+                return "intent://" + u.host + u.pathname + u.search +
+                    "#Intent;scheme=" + u.protocol.replace(":", "") +
+                    (pkg ? ";package=" + pkg : "") +
+                    ";S.browser_fallback_url=" + encodeURIComponent(webUrl) + ";end";
+            } catch (e) {
+                return null;
+            }
+        }
+
+        // Facebook does not reliably take over normal https links on Android, so it gets its own
+        // scheme: fb://facewebmodal opens any facebook.com page inside the app.
+        // No package is forced, so Facebook Lite works too. Not installed -> normal web page.
+        function toFacebookIntent(webUrl) {
+            try {
+                const u = new URL(webUrl);
+                if (!/(^|\.)facebook\.com$/i.test(u.hostname)) return null;
+                const target = "https://www.facebook.com" + u.pathname + u.search;
+                return "intent://facewebmodal/f?href=" + encodeURIComponent(target) +
+                    "#Intent;scheme=fb;S.browser_fallback_url=" + encodeURIComponent(webUrl) + ";end";
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function hexToRgba(hex, a) {
+            const h = hex.replace("#", "");
+            return `rgba(${parseInt(h.slice(0, 2), 16)}, ${parseInt(h.slice(2, 4), 16)}, ${parseInt(h.slice(4, 6), 16)}, ${a})`;
+        }
+
+        // Email and phone are not web links: they open the mail app / dialer.
+        const CONTACT = { e: "mailto:", tp: "tel:" };
+
+        function buildUrl(id, value) {
+            if (CONTACT[id]) return CONTACT[id] + value.replace(/^(mailto:|tel:)/i, "");
+            return /^https?:\/\//i.test(value) ? value : "https://" + value;
+        }
+
+        // Short, readable label under the platform name.
+        function prettyUrl(id, value) {
+            if (CONTACT[id]) return value.replace(/^(mailto:|tel:)/i, "");
+            let v = value.replace(/^https?:\/\/(www\.)?/i, "").replace(/\/$/, "");
+            if (id === "w") {
+                const m = v.match(/wa\.me\/(\d+)/i);
+                return m ? "+" + m[1] : v;
+            }
+            if (id === "lc") return "Google Maps";
+            return v;
+        }
+
+        function toggleLang() {
+            currentLang = currentLang === 'en' ? 'ar' : 'en';
+            document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+            document.documentElement.lang = currentLang;
+            document.getElementById('langBtn').innerText = translations[currentLang].switchBtn;
+            document.getElementById('errorText').innerText = translations[currentLang].error;
+            if (window.decodedData) renderLinks(window.decodedData);
+        }
+
+        function decodeWithPako(hash) {
+            var base64 = hash.replace(/-/g, '+').replace(/_/g, '/');
+            while (base64.length % 4) base64 += '=';
+            var rawData = window.atob(base64);
+            var compressedData = new Uint8Array(rawData.length);
+            for (var i = 0; i < rawData.length; ++i) compressedData[i] = rawData.charCodeAt(i);
+            var decompressed = pako.inflateRaw(compressedData, { to: 'string' });
+            const parts = decompressed.split('|');
+            const name = parts[0];
+            const linksStr = parts[1] || "";
+            const links = [];
+            if (linksStr) {
+                linksStr.split(';').forEach(item => {
+                    const colonIndex = item.indexOf(':');
+                    if (colonIndex > -1) links.push([item.substring(0, colonIndex), item.substring(colonIndex + 1)]);
+                });
+            }
+            return { n: name, l: links };
+        }
+
+        function initials(name) {
+            const words = name.trim().split(/\s+/).filter(Boolean);
+            if (!words.length) return "";
+            return (words.length === 1 ? words[0].slice(0, 2) : words[0][0] + words[1][0]).toUpperCase();
+        }
+
+        function renderHeader(data) {
+            const t = translations[currentLang];
+            const hasName = data.n && data.n.trim() !== "";
+            document.getElementById('ownerName').innerText = hasName ? data.n : t.defaultName;
+            const av = document.getElementById('avatar');
+            av.className = "";
+            if (hasName) {
+                av.textContent = initials(data.n);
+            } else {
+                av.innerHTML = '<svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="#a5b4fc" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.5-1.5"/></svg>';
+            }
+            document.getElementById('hint').innerText = t.hint;
+            document.getElementById('countText').innerHTML = t.count(data.l.length);
+            document.title = hasName ? data.n : t.defaultName;
+            document.getElementById('profile').style.display = 'block';
+        }
+
+        function renderLinks(data) {
+            renderHeader(data);
+            const grid = document.getElementById('linksGrid');
+            grid.innerHTML = '';
+            const names = translations[currentLang].names;
+
+            data.l.forEach(([id, value], index) => {
+                const url = buildUrl(id, value);
+                const brand = BRAND[id] || "#818cf8";
+                const label = names[id] || id;
+
+                const a = document.createElement("a");
+                a.className = "link";
+                a.href = url;                      // normal link stays as fallback (desktop, long-press, no JS)
+                a.rel = "noopener";
+                a.setAttribute("aria-label", translations[currentLang].open + " " + label);
+                if (!IS_IOS && !CONTACT[id]) a.target = "_blank";  // iOS: same tab so universal links can open the app
+                a.style.setProperty("--i", index);
+                a.style.setProperty("--b", brand);
+                a.style.setProperty("--b-soft", hexToRgba(brand, 0.22));
+                a.style.setProperty("--b-mid", hexToRgba(brand, 0.55));
+                a.addEventListener("click", function (ev) {
+                    if (!IS_ANDROID || CONTACT[id]) return;
+                    const intent = (id === "f" && toFacebookIntent(url)) || toIntentUrl(url, ANDROID_PKG[id]);
+                    if (intent) {
+                        ev.preventDefault();
+                        window.location.href = intent;
+                    }
+                });
+
+                const tile = document.createElement("div");
+                tile.className = "tile";
+                const img = document.createElement("img");
+                img.alt = "";
+                img.src = LOGO_DIR + id + "1.png";
+                img.onerror = function () {
+                    tile.removeChild(img);
+                    tile.classList.add("fb");
+                    tile.textContent = label.charAt(0);
+                };
+                tile.appendChild(img);
+
+                const meta = document.createElement("div");
+                meta.className = "meta";
+                const title = document.createElement("div");
+                title.className = "title";
+                title.textContent = label;
+                const sub = document.createElement("div");
+                sub.className = "url";
+                sub.textContent = prettyUrl(id, value);
+                meta.appendChild(title);
+                meta.appendChild(sub);
+
+                const chev = document.createElement("div");
+                chev.className = "chev";
+                chev.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>';
+
+                a.appendChild(tile);
+                a.appendChild(meta);
+                a.appendChild(chev);
+                grid.appendChild(a);
+            });
+        }
+
+        function showError() {
+            document.getElementById('errorText').innerText = translations[currentLang].error;
+            document.getElementById('errorMsg').style.display = 'block';
+        }
+
+        (function () {
+            try {
+                const hash = location.hash.slice(1);
+                if (!hash) { showError(); return; }
+                const data = decodeWithPako(hash);
+                window.decodedData = data;
+                renderLinks(data);
+            } catch (e) {
+                console.error("Decode error:", e);
+                showError();
+            }
+        })();
+    </script>
+</body>
+</html>
